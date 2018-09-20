@@ -11,5 +11,5 @@ ADD bin/syslog-massive-server .
 ADD entrypoint.sh .
 
 EXPOSE $PORT
-
+USER 1001
 CMD /go/src/app/entrypoint.sh

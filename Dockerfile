@@ -12,4 +12,4 @@ ADD entrypoint.sh .
 
 EXPOSE $PORT
 
-ENTRYPOINT [ "/go/src/app/entrypoint.sh" ]
+CMD /go/src/app/entrypoint.sh

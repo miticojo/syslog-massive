@@ -18,4 +18,8 @@ client:
 docker:
 	docker build -t miticojo/syslog-massive-server:latest .
 
+docker-push:
+	docker push miticojo/syslog-massive-server:latest
+
+
 .PHONY: server client docker

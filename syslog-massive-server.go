@@ -30,7 +30,7 @@ func main() {
 		}
 		// Close the listener when the application closes.
 		defer l.Close()
-		fmt.Println("Listening for UDP messages:")
+		fmt.Printf("Listening for messages on 0.0.0.0 port %s/%s:\n", syslogProto, syslogPort)
 		readUDP(l)
 	} else {
 		l, err := net.Listen("tcp4", "0.0.0.0" + ":" + syslogPort)
@@ -38,7 +38,7 @@ func main() {
 			fmt.Println("Error listening:", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println("Listening for TCP messages:")
+		fmt.Printf("Listening for messages on 0.0.0.0 port %s/%s:\n", syslogProto, syslogPort)
 		conn, _ := l.Accept()
 		defer l.Close()
 		readTCP(conn)

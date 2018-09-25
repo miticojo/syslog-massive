@@ -2,12 +2,34 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"log/syslog"
+	"net"
 	"os"
 	"strconv"
 	"time"
 )
+
+type Priority syslog.Priority
+
+type Formatter func(p Priority, hostname, tag, content string) string
+func DefaultFormatter(p Priority, hostname, tag, content string) string {
+	timestamp := time.Now().Format(time.RFC3339)
+	msg := fmt.Sprintf("<%d> %s %s %s[%d]: %s\n",
+		p, timestamp, hostname, tag, os.Getpid(), content)
+	return msg
+}
+func RFC3164Formatter(p Priority, hostname, tag, content string) string {
+	timestamp := time.Now().Format(time.Stamp)
+	msg := fmt.Sprintf("<%d> %s %s %s[%d]: %s\n",
+		p, timestamp, hostname, tag, os.Getpid(), content)
+	return msg
+}
+
+func sendUDPMsg(proto string, remote string, hostname string){
+	conn, _ := net.Dial(proto, remote)
+	conn.Write([]byte(DefaultFormatter(Priority(28), hostname, "syslog-client", "hello from client" )))
+	conn.Close()
+}
 
 func main() {
 
@@ -21,22 +43,14 @@ func main() {
 	msgQty, _ := strconv.Atoi(args[0])
 	syslogProto := args[1]
 	syslogSrv := args[2]
-
-	// setup syslog endpoint
-	sysLog, err := syslog.Dial(syslogProto, syslogSrv,
-		syslog.LOG_WARNING|syslog.LOG_DAEMON, "demotag")
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	hostname, _ := os.Hostname()
 
 	// cycling based on message quantity
 	for i := 0; i < msgQty; i++ {
-		fmt.Fprintf(sysLog, "This is a daemon warning with demotag.")
+		sendUDPMsg(syslogProto, syslogSrv, hostname)
 		time.Sleep(time.Nanosecond*200000)
 	}
 
 	// print out comment
 	fmt.Printf("%d messages sent to %s through %s proto\n", msgQty, syslogSrv, syslogProto)
-
 }

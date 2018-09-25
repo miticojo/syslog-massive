@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"runtime"
 	"strconv"
 )
 
@@ -31,13 +30,13 @@ func listenUDP(syslogPort int, syslogProto string) {
 	fmt.Printf("Listening on %s:%d/%s\n", addr.IP, syslogPort, syslogProto)
 	ch := make(chan string)
 	cnt := 0
-	for i := 0; i < runtime.NumCPU(); i++ {
-		for err == nil {
-			go readUDPMsg(connection, ch)
-			cnt++
-			fmt.Printf("%d - %s", cnt, <-ch)
-		}
+
+	for err == nil {
+		go readUDPMsg(connection, ch)
+		cnt++
+		fmt.Printf("%d - %s", cnt, <-ch)
 	}
+
 }
 
 func main() {

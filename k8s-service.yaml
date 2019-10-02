@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: udp-server-service
+  labels:
+    app: udp-server
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 2000
+    protocol: UDP
+  selector:
+    name: udp-server

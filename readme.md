@@ -30,5 +30,5 @@ default values for are:
 
 to run it with no values specified:
 ```
-docker run -rm miticojo/syslog-massive-server:latest ./syslog-massive-client 10 udp 192.168.1.10:2000
+docker run --rm miticojo/syslog-massive-server:latest ./syslog-massive-client 10 udp 192.168.1.10:2000
 ```

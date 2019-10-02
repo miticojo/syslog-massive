@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: udp-server-deployment
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        name: udp-server
+    spec:
+      containers:
+      - name: udp-server
+        image: miticojo/syslog-massive-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 2000
+          protocol: UDP
